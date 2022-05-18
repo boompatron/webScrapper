@@ -25,5 +25,6 @@ def extract_indeed_jobs(last_page):
     results = soup.find_all('div', {'class', re.compile('^cardOutline')})
     for result in results:
         job_title = result.find('h2', {'class': 'jobTitle'}).find('a').find('span')['title']
-        print(job_title)
+        company = result.find('span', {'class': 'companyName'}).string
+        print(company)
     return jobs
