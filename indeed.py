@@ -1,3 +1,4 @@
+import re
 import requests
 from bs4 import BeautifulSoup
 LIMIT = 50
@@ -17,6 +18,12 @@ def extract_indeed_pages():
 
 def extract_indeed_jobs(last_page):
     jobs = []
-    for page in range(last_page):
-        result = requests.get(f"{URL}&start={page * LIMIT}")
-        print(result.status_code)
+    # for page in range(last_page):
+    result = requests.get(f"{URL}&start={0 * LIMIT}")
+    soup = BeautifulSoup(result.text, 'html.parser')
+    # results = soup.find_all("div", {"class": "fs-unmask"})
+    results = soup.find_all('div', {'class', re.compile('^cardOutline')})
+    for result in results:
+        job_title = result.find('h2', {'class': 'jobTitle'}).find('a').find('span')['title']
+        print(job_title)
+    return jobs
